@@ -22,7 +22,7 @@ static void	free_nodes(lstring *head)
 
 int		get_next_line(const int fd, char **line)
 {
-	char			buf[1];
+	char			buf[BUFF_SIZE];
 	unsigned int	linelen;
 	lstring			*head;
 	lstring			*tmp;

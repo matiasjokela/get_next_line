@@ -6,14 +6,7 @@
 # include "./libft/libft.h"
 # include <fcntl.h>
 
-#define BUFF_SIZE	32
-
-/*typedef struct str_list
-{
-	char			*str;
-	unsigned int	bytes_read;
-	struct str_list	*next;
-}				str_list;*/
+#define BUFF_SIZE	1000000
 
 typedef struct	lstring
 {
