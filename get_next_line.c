@@ -2,56 +2,68 @@
 #include "get_next_line.h"
 #include <stdio.h>
 
-static str_list	*add_str_node(void)
+static lstring	*new_node()
 {
-	str_list	*node;
-	char		string[BUFF_SIZE];
+	lstring	*node;
 
-	node = (str_list *)malloc(sizeof(str_list));
-	if (node == NULL)
-		return (NULL);
-	ft_bzero(string, BUFF_SIZE);
-	node->str = string;
-	node->bytes_read = 0;
+	node = (lstring *)malloc(sizeof(lstring));
+	node->c = '\0';
 	node->next = NULL;
 	return (node);
 }
 
-
-int	get_next_line(const int fd, char **line)
+static void	free_nodes(lstring *head)
 {
-	char			buf[BUFF_SIZE];
-	unsigned int	total_bytes;
-	str_list		*list;
-	str_list		*tmp;
+	if (head != NULL)
+		free_nodes(head->next);
+	free(head);
+}
 
-	total_bytes = 0;
-	tmp = add_str_node();
-	if (tmp == NULL)
-		return (-1);
-	list = tmp;
-	while ((tmp->bytes_read = read(fd, buf, BUFF_SIZE)))
+
+int		get_next_line(const int fd, char **line)
+{
+	char			buf[1];
+	unsigned int	linelen;
+	lstring			*head;
+	lstring			*tmp;
+	char			*oneline;
+
+	linelen = 0;
+	tmp = new_node();
+	head = tmp;
+	if (read(fd, buf, 0) < 0)
+		return (-1); // What if read returns 0
+	while (read(fd, buf, 1) > 0)
 	{
-		//ft_strcpy(tmp->str, buf);
-		for (int i = 0; i < tmp->bytes_read; i++)
-		{
-			(tmp->str)[i] = buf[i];
-			//printf("i: %d\ntmp: %c \nbuf: %c\n---\n", i, (tmp->str)[i], buf[i]);
-		}
-
-		for (int i = 0; i < tmp->bytes_read; i++)
-		{
-			//(tmp->str)[i] = buf[i];
-			printf("i: %d\ntmp: %c \nbuf: %c\n---\n", i, (tmp->str)[i], buf[i]);
-		}
-
-		total_bytes += tmp->bytes_read;
-		tmp->next = add_str_node();
+		if (buf[0] == '\n')
+			break ;
+		tmp->c = buf[0];
+		tmp->next = new_node();
 		tmp = tmp->next;
-
+		linelen++;
 	}
+	tmp = head;
+	/*line = (char **)malloc(sizeof(char *));
+	if (line == NULL)
+		return (-1);*/
+	oneline = (char *)malloc(sizeof(char) * linelen + 1);
+	if (oneline == NULL)
+		return (-1);  // Must free line, make a function
+	linelen = 0;
+	while (tmp->c != '\0')
+	{
+		oneline[linelen] = tmp->c;
+		tmp = tmp->next;
+		linelen++;
+	}
+	oneline[linelen] = '\0';
+	*line = oneline;
+	free_nodes(head);	
 
-	return(0);
+	
+
+
+	return(0); // Miten meni returnit??
 }
 
 
@@ -60,7 +72,17 @@ int main(void)
 	char **s;
 
 	int fd = open("todo.txt", O_RDONLY);
+	int fd1 = open("toinenTesti.txt", O_RDONLY);
 	get_next_line(fd, s);
+	printf("%s\n", *s);	
+	get_next_line(fd1, s);
+	printf("%s\n", *s);		
+	get_next_line(fd, s);
+	printf("%s\n", *s);		
+	get_next_line(1, s);
+	printf("%s\n", *s);		
+
+	return (0);
 
 	//printf("%d\n", fd);
 }
