@@ -10,6 +10,7 @@ static str_list	*add_str_node(void)
 	node = (str_list *)malloc(sizeof(str_list));
 	if (node == NULL)
 		return (NULL);
+	ft_bzero(string, BUFF_SIZE);
 	node->str = string;
 	node->bytes_read = 0;
 	node->next = NULL;
@@ -25,23 +26,23 @@ int	get_next_line(const int fd, char **line)
 	str_list		*tmp;
 
 	total_bytes = 0;
-	list = add_str_node();
-	if (list == NULL)
+	tmp = add_str_node();
+	if (tmp == NULL)
 		return (-1);
-	tmp = list;
+	list = tmp;
 	while ((tmp->bytes_read = read(fd, buf, BUFF_SIZE)))
 	{
 		//ft_strcpy(tmp->str, buf);
-		for (int i = 0; i <= tmp->bytes_read; i++)
+		for (int i = 0; i < tmp->bytes_read; i++)
 		{
 			(tmp->str)[i] = buf[i];
-			//printf("tmp: %c \nbuf: %c\n---\n", (tmp->str)[i], buf[i]);
+			//printf("i: %d\ntmp: %c \nbuf: %c\n---\n", i, (tmp->str)[i], buf[i]);
 		}
 
-		for (int i = 0; i <= tmp->bytes_read; i++)
+		for (int i = 0; i < tmp->bytes_read; i++)
 		{
 			//(tmp->str)[i] = buf[i];
-			printf("tmp: %c \nbuf: %c\n---\n", (tmp->str)[i], buf[i]);
+			printf("i: %d\ntmp: %c \nbuf: %c\n---\n", i, (tmp->str)[i], buf[i]);
 		}
 
 		total_bytes += tmp->bytes_read;
