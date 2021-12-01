@@ -2,68 +2,40 @@
 #include "get_next_line.h"
 #include <stdio.h>
 
-static lstring	*new_node()
-{
-	lstring	*node;
 
-	node = (lstring *)malloc(sizeof(lstring));
-	node->c = '\0';
-	node->next = NULL;
-	return (node);
-}
-
-static void	free_nodes(lstring *head)
-{
-	if (head != NULL)
-		free_nodes(head->next);
-	free(head);
-}
 
 
 int		get_next_line(const int fd, char **line)
 {
-	char			buf[BUFF_SIZE];
-	unsigned int	linelen;
-	lstring			*head;
-	lstring			*tmp;
-	char			*oneline;
+	static char	*str_arr[FD_INDEX];
+	char		buf[BUFF_SIZE + 1];
+	long		bytes_read;
+	int 		i;
 
-	linelen = 0;
-	tmp = new_node();
-	head = tmp;
-	if (read(fd, buf, 0) < 0)
-		return (-1); // What if read returns 0
-	while (read(fd, buf, 1) > 0)
+	bytes_read = 0;
+	ft_bzero(buf, BUFF_SIZE + 1);
+	str_arr[0] = ft_strjoin("", str_arr[fd]);
+	while ((bytes_read = read(fd, buf, BUFF_SIZE)))
 	{
-		if (buf[0] == '\n')
-			break ;
-		tmp->c = buf[0];
-		tmp->next = new_node();
-		tmp = tmp->next;
-		linelen++;
+		i = 0;
+		if (bytes_read < 0)
+			return (-1);
+		while (i < bytes_read)
+		{
+			if (buf[i] == '\n')
+			{
+				buf[i] = '\0';
+				str_arr[0] = ft_strjoin(str_arr[0], buf);
+				str_arr[fd] = ft_strjoin("", (&(buf))[i + 1]);
+				*line = str_arr[0];
+				//ft_bzero(str_arr[0], ft_strlen(str_arr[0]));
+				return (0);
+			}
+			str_arr[0] = ft_strjoin(str_arr[0], buf);
+			i++;
+		}
 	}
-	tmp = head;
-	/*line = (char **)malloc(sizeof(char *));
-	if (line == NULL)
-		return (-1);*/
-	oneline = (char *)malloc(sizeof(char) * linelen + 1);
-	if (oneline == NULL)
-		return (-1);  // Must free line, make a function
-	linelen = 0;
-	while (tmp->c != '\0')
-	{
-		oneline[linelen] = tmp->c;
-		tmp = tmp->next;
-		linelen++;
-	}
-	oneline[linelen] = '\0';
-	*line = oneline;
-	free_nodes(head);	
-
-	
-
-
-	return(0); // Miten meni returnit??
+	return (-1);
 }
 
 
@@ -79,7 +51,7 @@ int main(void)
 	printf("%s\n", *s);		
 	get_next_line(fd, s);
 	printf("%s\n", *s);		
-	get_next_line(1, s);
+	get_next_line(fd1, s);
 	printf("%s\n", *s);		
 
 	return (0);
