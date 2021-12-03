@@ -6,7 +6,7 @@ int loppu = 0;
 static	int	read_fd(const int fd, char **line, char *str_arr[FD], int end);
 
 
-static	int read_buffer(const int fd, char **line, char *str_arr[FD])
+static	int read_buffer(const int fd, char **line, char *str_arr[FD], int end)
 {
 	char	buf[BUFF_SIZE + 1];
 	int		bytes_read;
@@ -23,10 +23,13 @@ static	int read_buffer(const int fd, char **line, char *str_arr[FD])
 		free(tmp);
 		//printf("In array: %s\n", str_arr[fd]);
 		//printf("Read_buffer, return read_fd\n");
-		return (read_fd(fd, line, str_arr, 1));
+		if (end == 1)
+			return (read_fd(fd, line, str_arr, end));
 	}
-	str_arr[FD - 1] = "End";
-	read_fd(fd, line, str_arr, 0);
+	end = 0;
+	str_arr[FD] = "End";
+	loppu = 1;
+	read_fd(fd, line, str_arr, end);
 	return (0);
 }
 
@@ -59,11 +62,14 @@ static	int	read_fd(const int fd, char **line, char *str_arr[FD], int end)
 			free(str_arr[fd]);
 			str_arr[fd] = ft_strdup(tmp);
 			free(tmp);
+			printf("Ollaan taalla\n");
 
 	}
+	//printf("Read_fd, return read_buffer\n");
 	if (end != 0)
-		read_buffer(fd, line, str_arr);
-	return (0);
+		read_buffer(fd, line, str_arr, end);
+	printf("end: %d\n", end);
+	return (end);
 }
 
 
@@ -73,15 +79,17 @@ int			get_next_line(const int fd, char **line)
 {
 	static char	*str_arr[FD];
 
-	str_arr[FD - 1] = "No end";
+	str_arr[FD] = "No end";
+	int			end;
+	end = 1;
+
+	read_buffer(fd, line, str_arr, end);
 
 
-	read_buffer(fd, line, str_arr);
-	if (ft_strcmp("No end", str_arr[FD - 1]) == 0)
-		return (1);
-	return (0);
-
-
+	printf("%s\n", str_arr[FD]);
+	if (loppu == 1)
+		return (0);
+	return (1);
 }
 
 

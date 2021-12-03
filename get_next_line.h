@@ -6,7 +6,7 @@
 # include "./libft/libft.h"
 # include <fcntl.h>
 
-#define BUFF_SIZE	2
+#define BUFF_SIZE	5
 #define FD			4096
 
 /*typedef struct	lstring

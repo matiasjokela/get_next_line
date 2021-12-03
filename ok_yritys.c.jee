@@ -2,31 +2,29 @@
 #include "get_next_line.h"
 #include <stdio.h>
 
-int loppu = 0;
 static	int	read_fd(const int fd, char **line, char *str_arr[FD], int end);
-
 
 static	int read_buffer(const int fd, char **line, char *str_arr[FD])
 {
 	char	buf[BUFF_SIZE + 1];
 	int		bytes_read;
+	int		end;
 	char	*tmp;
 
 	if (read(fd, buf, 0) < 0)
 		return (-1);
+	end = 1;
 	while ((bytes_read = read(fd, buf, BUFF_SIZE)))
 	{
+		if (bytes_read < BUFF_SIZE)
+			end = 0;
 		tmp = ft_strjoin(str_arr[fd], buf);
-		//ft_bzero(str_arr[fd], ft_strlen(str_arr[fd]));	
 		free(str_arr[fd]);
-		str_arr[fd] = ft_strdup(tmp);
-		free(tmp);
+		str_arr[fd] = tmp;
 		//printf("In array: %s\n", str_arr[fd]);
-		//printf("Read_buffer, return read_fd\n");
-		return (read_fd(fd, line, str_arr, 1));
-	}
-	str_arr[FD - 1] = "End";
-	read_fd(fd, line, str_arr, 0);
+		printf("Read_buffer, return read_fd\n");
+		return (read_fd(fd, line, str_arr, end));
+	}	
 	return (0);
 }
 
@@ -36,7 +34,6 @@ static	int	read_fd(const int fd, char **line, char *str_arr[FD], int end)
 	char	*tmp;
 
 	i = 0;
-
 	while (str_arr[fd][i])
 	{
 		if (str_arr[fd][i] == '\n')
@@ -47,23 +44,13 @@ static	int	read_fd(const int fd, char **line, char *str_arr[FD], int end)
 			free(str_arr[fd]);
 			str_arr[fd] = ft_strdup(tmp);
 			free(tmp);
-			//printf("Read_fd, return 1\n");
-			return (8);	
+			printf("Read_fd, return read_buffer\n");		
+			return (1);
 		}
 		i++;
 	}
-	if (end == 0)
-	{
-			*line = ft_strdup(str_arr[fd]);
-			tmp = ft_strdup(str_arr[fd]);
-			free(str_arr[fd]);
-			str_arr[fd] = ft_strdup(tmp);
-			free(tmp);
-
-	}
-	if (end != 0)
-		read_buffer(fd, line, str_arr);
-	return (0);
+	printf("Read_fd, return read_buffer\n");
+	return (read_buffer(fd, line, str_arr));
 }
 
 
@@ -73,15 +60,9 @@ int			get_next_line(const int fd, char **line)
 {
 	static char	*str_arr[FD];
 
-	str_arr[FD - 1] = "No end";
-
-
-	read_buffer(fd, line, str_arr);
-	if (ft_strcmp("No end", str_arr[FD - 1]) == 0)
-		return (1);
-	return (0);
-
-
+	if (!str_arr[fd])
+		return (read_buffer(fd, line, str_arr));
+	return (read_fd(fd, line, str_arr, 1));
 }
 
 
@@ -91,14 +72,22 @@ int main(void)
 
 	int fd = open("todo.txt", O_RDONLY);
 	int fd1 = open("toinenTesti.txt", O_RDONLY);
-	
-	printf("File 1:\n");
-	for (int i = 0; i < 3; i++)
-	{
-		int x = get_next_line(fd, s);
-		printf("%d, %s\n", x, *s);
-	}
-			
+	get_next_line(fd, s);
+	printf("\n----------\n%s\n", *s);	
+	get_next_line(fd1, s);
+	printf("%s\n", *s);		
+	get_next_line(fd, s);
+	printf("%s\n", *s);		
+	get_next_line(fd1, s);
+	printf("%s\n", *s);		
+	get_next_line(fd, s);
+	printf("%s\n", *s);		
+	get_next_line(fd1, s);
+	printf("%s\n", *s);		
+	get_next_line(fd, s);
+	printf("%s\n", *s);		
+	get_next_line(fd1, s);
+	printf("%s\n", *s);				
 
 
 
