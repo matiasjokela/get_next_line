@@ -7,7 +7,7 @@
 # include <fcntl.h>
 
 #define BUFF_SIZE	2
-#define FD_INDEX	4096
+#define FD			4096
 
 /*typedef struct	lstring
 {
