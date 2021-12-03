@@ -1,6 +1,6 @@
 
 #include "get_next_line.h"
-//#include <stdio.h>
+#include <stdio.h>
 
 int loppu = 0;
 static	int	read_fd(const int fd, char **line, char *str_arr[FD], int end);
@@ -13,11 +13,7 @@ static	int read_buffer(const int fd, char **line, char *str_arr[FD])
 	char	*tmp;
 
 	if (read(fd, buf, 0) < 0)
-	{
-		str_arr[FD - 1] = "KO";
 		return (-1);
-	}
-
 	while ((bytes_read = read(fd, buf, BUFF_SIZE)))
 	{
 		tmp = ft_strjoin(str_arr[fd], buf);
@@ -41,7 +37,7 @@ static	int	read_fd(const int fd, char **line, char *str_arr[FD], int end)
 
 	i = 0;
 
-	while ((str_arr[fd]) && str_arr[fd][i])
+	while (str_arr[fd][i])
 	{
 		if (str_arr[fd][i] == '\n')
 		{
@@ -80,11 +76,9 @@ int			get_next_line(const int fd, char **line)
 	str_arr[FD - 1] = "No end";
 
 
-	read_fd(fd, line, str_arr, 1);
+	read_buffer(fd, line, str_arr);
 	if (ft_strcmp("No end", str_arr[FD - 1]) == 0)
 		return (1);
-	else if (ft_strcmp("KO", str_arr[FD - 1]) == 0)
-		return (-1);
 	return (0);
 
 
@@ -102,7 +96,7 @@ int main(void)
 	printf("File 1:\n");
 	while (1)
 	{
-		x = get_next_line(-1, s);
+		x = get_next_line(fd, s);
 		printf("%d, %s\n", x, *s);
 		if (x <= 0)
 			break ;
@@ -121,4 +115,5 @@ int main(void)
 
 	return (0);
 
+	//printf("%d\n", fd);
 }
