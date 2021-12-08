@@ -41,7 +41,12 @@ static void	read_fd(const int fd, char **line, char *str_arr[FD])
 	{
 		if (str_arr[fd][i] == '\n')
 		{
-			
+			if (i == 0 && ft_atoi(str_arr[FD - 3]) == 1)
+			{
+				*line = NULL;
+				str_arr[FD - 3] = "2";
+				return ;
+			}
 			str_arr[fd][i] = '\0';
 			*line = ft_strdup(str_arr[fd]);
 			tmp = ft_strdup(&(str_arr)[fd][i + 1]);
@@ -104,7 +109,6 @@ int			get_next_line(const int fd, char **line)
 	
 	return (ft_atoi(str_arr[FD - 1]));
 
-
 }
 
 
@@ -140,3 +144,4 @@ int main(void)
 
 
 }
+
