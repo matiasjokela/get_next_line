@@ -6,14 +6,11 @@
 # include "./libft/libft.h"
 # include <fcntl.h>
 
-#define BUFF_SIZE	1
-#define FD			4096
+#define BUFF_SIZE	9
+# define FD_SIZE	4096
 
-typedef struct	lstring
-{
-	char			c;
-	struct lstring	*next;
-}				lstring;
+
+
 
 int	get_next_line(const int fd, char **line);
 
