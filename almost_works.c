@@ -1,15 +1,14 @@
 
 #include "get_next_line.h"
-//#include <stdio.h>
-//#include <unistd.h>
+#include <stdio.h>
+#include <unistd.h>
 
-//int	check_arr(char *arr[FD_SIZE], int fd, char **line);
+int	check_arr(char *arr[FD_SIZE], int fd, char **line);
 
 int	read_buf(char *arr[FD_SIZE], const int fd, char **line)
 {
 	char	buf[BUFF_SIZE + 1];
 	char	*tmp;
-	char	*temp;
 
 	if (read(fd, buf, 0) < 0)
 		return (-1);
@@ -22,29 +21,22 @@ int	read_buf(char *arr[FD_SIZE], const int fd, char **line)
 			if (*line == NULL)
 				*line = ft_strdup(buf);
 			else
-			{
-				temp = ft_strjoin(*line, buf);
-				free(*line);
-				*line = temp;
-			}
+				*line = ft_strjoin(*line, buf);
 		}
 		else
 		{
 			tmp[0] = '\0';
-			temp = ft_strjoin(*line, buf);
-			free(*line);
-			*line = temp;
+			*line = ft_strjoin(*line, buf);
 			tmp++;
 			arr[fd] = ft_strdup(tmp);
 			return (1);
 		}
-		free(tmp);
 		ft_bzero(buf, BUFF_SIZE + 1);
 	}
 
 	//printf("%s\n", *line);
 	//ft_strdel(&(arr[fd]));
-	if (*line == NULL || *line[0] == '\0')
+	if (*line[0] == '\0')
 	{
 		return (0);
 	}
@@ -83,13 +75,10 @@ int	get_next_line(const int fd, char **line)
 {
 	static char	*arr[FD_SIZE];
 
-	
-
-	if (fd < 0 || fd > FD_SIZE || !line)
-		return (-1);
+	*line = NULL;
 	//arr[fd] = (char *)malloc(sizeof(char *));
 
-	*line = NULL;
+
 	return (check_arr(arr, fd, line));
 
 
@@ -101,7 +90,7 @@ int	get_next_line(const int fd, char **line)
 }
 
 
-/*
+
 
 int main(void)
 {
@@ -120,7 +109,7 @@ int main(void)
 
 
 
-
+/*
 	
 	printf("File 1:\n");
 	while (1)
@@ -142,9 +131,8 @@ int main(void)
 			break ;
 	}
 			
-
+*/
 
 
 }
 
-*/

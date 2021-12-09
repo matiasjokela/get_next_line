@@ -3,13 +3,12 @@
 //#include <stdio.h>
 //#include <unistd.h>
 
-//int	check_arr(char *arr[FD_SIZE], int fd, char **line);
+int	check_arr(char *arr[FD_SIZE], int fd, char **line);
 
 int	read_buf(char *arr[FD_SIZE], const int fd, char **line)
 {
 	char	buf[BUFF_SIZE + 1];
 	char	*tmp;
-	char	*temp;
 
 	if (read(fd, buf, 0) < 0)
 		return (-1);
@@ -22,18 +21,12 @@ int	read_buf(char *arr[FD_SIZE], const int fd, char **line)
 			if (*line == NULL)
 				*line = ft_strdup(buf);
 			else
-			{
-				temp = ft_strjoin(*line, buf);
-				free(*line);
-				*line = temp;
-			}
+				*line = ft_strjoin(*line, buf);
 		}
 		else
 		{
 			tmp[0] = '\0';
-			temp = ft_strjoin(*line, buf);
-			free(*line);
-			*line = temp;
+			*line = ft_strjoin(*line, buf);
 			tmp++;
 			arr[fd] = ft_strdup(tmp);
 			return (1);
