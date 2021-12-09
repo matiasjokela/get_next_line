@@ -1,1 +1,1 @@
-gcc get_next_line.c -L./libft -lft && ./a.out
+gcc get_next_line.c -g -L./libft -lft && ./a.out

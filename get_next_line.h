@@ -6,7 +6,7 @@
 # include "./libft/libft.h"
 # include <fcntl.h>
 
-#define BUFF_SIZE	9
+#define BUFF_SIZE	8
 # define FD_SIZE	4096
 
 

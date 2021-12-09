@@ -2,6 +2,7 @@
 #include "get_next_line.h"
 #include <stdio.h>
 
+int	check_arr(char *arr[FD_SIZE], int fd, char **line);
 
 int	read_buf(char *arr[FD_SIZE], const int fd, char **line)
 {
@@ -10,6 +11,7 @@ int	read_buf(char *arr[FD_SIZE], const int fd, char **line)
 
 	if (read(fd, buf, 0) < 0)
 		return (-1);
+	ft_bzero(buf, BUFF_SIZE + 1);
 	while (read(fd, buf, BUFF_SIZE) > 0)
 	{
 		tmp = ft_strchr(buf, '\n');
@@ -30,6 +32,8 @@ int	read_buf(char *arr[FD_SIZE], const int fd, char **line)
 			return (1);
 		}
 	}
+	//printf("jälel: %s\n", arr[fd]);
+	
 	return (0);
 }
 
@@ -42,12 +46,15 @@ int	check_arr(char *arr[FD_SIZE], int fd, char **line)
 	tmp = ft_strchr(arr[fd], '\n');
 	if (tmp == NULL)
 	{
-		*line = arr[fd];
-		return (0);
+		*line = ft_strdup(arr[fd]);
+		ft_bzero(arr[fd], 20);
+		return (read_buf(arr, fd, line));
 	}
 	tmp[0] = '\0';
 	*line = ft_strdup(arr[fd]);
 	tmp++;
+	//ft_bzero(arr[fd], 20);
+	//free(arr[fd]);
 	arr[fd] = tmp;
 	return (1);
 	
