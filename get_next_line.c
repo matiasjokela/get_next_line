@@ -1,7 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mjokela <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/10 14:34:14 by mjokela           #+#    #+#             */
+/*   Updated: 2021/12/10 14:34:21 by mjokela          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	join_to_line(char **line, char buf[])
+static void	join_to_line(char **line, char buf[])
 {
 	char	*temp;
 
@@ -10,12 +21,11 @@ void	join_to_line(char **line, char buf[])
 	*line = temp;
 }
 
-int	read_buf(char *arr[FD_SIZE], const int fd, char **line, char *tmp)
+static int	read_buf(char *arr[FD_SIZE], const int fd, char **line, char *tmp)
 {
 	char	buf[BUFF_SIZE + 1];
 
-	if (read(fd, buf, 0) < 0)
-		return (-1);
+	ft_bzero(buf, BUFF_SIZE + 1);
 	while (read(fd, buf, BUFF_SIZE) > 0)
 	{
 		tmp = ft_strchr(buf, '\n');
@@ -39,10 +49,11 @@ int	read_buf(char *arr[FD_SIZE], const int fd, char **line, char *tmp)
 	return (1);
 }
 
-int	check_arr(char *arr[FD_SIZE], int fd, char **line)
+static int	check_arr(char *arr[FD_SIZE], int fd, char **line)
 {
 	char	*tmp;
 
+	tmp = NULL;
 	if (arr[fd] == NULL)
 		return (read_buf(arr, fd, line, tmp));
 	tmp = ft_strchr(arr[fd], '\n');
@@ -63,10 +74,10 @@ int	get_next_line(const int fd, char **line)
 {
 	static char	*arr[FD_SIZE];
 
+	if (read(fd, arr[0], 0) < 0)
+		return (-1);
 	if (fd < 0 || fd > FD_SIZE || !line)
 		return (-1);
 	*line = NULL;
 	return (check_arr(arr, fd, line));
 }
-
-
