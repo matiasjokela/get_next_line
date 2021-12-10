@@ -13,6 +13,7 @@ int main(void)
 	int fd3 = open("test2.txt", O_RDONLY);
 	int fd4 = open("empty.txt", O_RDONLY);
 	int fd5 = open("emptyline.txt", O_RDONLY);
+	//int fd6 = open("bible.txt", O_RDONLY);
 	
 
 	printf("-------\nTesting negative fd:\n%d\n", get_next_line(-5, &s));
@@ -64,8 +65,18 @@ int main(void)
 		printf("%s\n",s);
 	}
 	
-
-
+/*
+	int i = 0;
+	while (1)
+	{
+		x = get_next_line(fd6, &s);
+		
+		printf("%d %s\n", i, s);
+		if (x <= 0)
+			break ;
+		i++;
+	}
+*/
 
 
 }
