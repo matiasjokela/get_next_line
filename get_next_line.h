@@ -16,7 +16,7 @@
 # include "./libft/libft.h"
 # include <fcntl.h>
 
-# define BUFF_SIZE	12
+# define BUFF_SIZE	50000
 # define FD_SIZE	4096
 
 int	get_next_line(const int fd, char **line);
